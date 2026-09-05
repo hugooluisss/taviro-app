@@ -10,6 +10,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {StatusBar, useColorScheme} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {CardEditScreen, CardListScreen, ShareNfcScreen, ShareQrScreen, ShareWhatsappScreen} from './src/screens';
+import {useTheme} from './src/theme';
 
 export type RootStackParamList = {
   CardList: undefined;
@@ -23,8 +24,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
   const isDark = useColorScheme() === 'dark';
+  const theme = useTheme();
   return (
-    <SafeAreaProvider><StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} /><NavigationContainer><Stack.Navigator>
+    <SafeAreaProvider><StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} /><NavigationContainer><Stack.Navigator screenOptions={{headerStyle: {backgroundColor: theme.gradient[0]}, headerTintColor: theme.onGradientText, headerTitleStyle: {color: theme.onGradientText}, headerShadowVisible: false}}>
       <Stack.Screen name="CardList" component={CardListScreen} options={{title: 'Mis tarjetas'}} />
       <Stack.Screen name="CardEdit" component={CardEditScreen} options={{title: 'Editar tarjeta'}} />
       <Stack.Screen name="ShareQr" component={ShareQrScreen} options={{title: 'Compartir por QR'}} />
