@@ -1,4 +1,4 @@
 export {buildShareableCard} from './ShareableCardService';
 export {ShareWhatsappService} from './ShareWhatsappService';
-export {ProfileService} from './ProfileService';
+export {CardService} from './CardService';
 export {ShareNfcService} from './ShareNfcService';

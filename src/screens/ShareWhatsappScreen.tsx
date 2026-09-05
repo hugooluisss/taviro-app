@@ -1,18 +1,22 @@
 import React from 'react';
 import {ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {useRoute} from '@react-navigation/native';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {RootStackParamList} from '../../App';
 import {useShareWhatsappController} from '../controllers';
 import {useTheme} from '../theme';
 
 export function ShareWhatsappScreen() {
   const theme = useTheme();
-  const {profile, loading, selectedFieldIds, toggleField, share, openWhatsApp, whatsappAvailable} = useShareWhatsappController();
+  const {cardId} = useRoute<NativeStackScreenProps<RootStackParamList, 'ShareWhatsapp'>['route']>().params;
+  const {card, loading, selectedFieldIds, toggleField, share, openWhatsApp, whatsappAvailable} = useShareWhatsappController(cardId);
 
   if (loading) return <ActivityIndicator style={styles.loader} color={theme.primary} />;
   return <ScrollView style={{backgroundColor: theme.background}} contentContainerStyle={styles.content}>
     <Text style={[styles.title, {color: theme.text}]}>Compartir por WhatsApp</Text>
     <Text style={[styles.subtitle, {color: theme.muted}]}>Elige los campos que quieres compartir.</Text>
     <View style={[styles.card, {backgroundColor: theme.surface, borderColor: theme.border}]}>
-      {profile.fields.map(field => <Pressable key={field.id} accessibilityRole="checkbox" accessibilityState={{checked: selectedFieldIds.includes(field.id)}} onPress={() => toggleField(field.id)} style={styles.field}>
+      {card.fields.map(field => <Pressable key={field.id} accessibilityRole="checkbox" accessibilityState={{checked: selectedFieldIds.includes(field.id)}} onPress={() => toggleField(field.id)} style={styles.field}>
         <Text style={[styles.checkbox, {color: selectedFieldIds.includes(field.id) ? theme.primary : theme.muted}]}>{selectedFieldIds.includes(field.id) ? '☑' : '☐'}</Text>
         <Text style={{color: theme.text}}>{field.label || 'Sin etiqueta'}</Text>
         <Text style={[styles.value, {color: theme.muted}]} numberOfLines={1}>{field.value}</Text>

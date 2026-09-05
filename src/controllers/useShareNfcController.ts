@@ -1,17 +1,19 @@
-import {useCallback, useEffect, useMemo, useState} from 'react';
-import {useProfileController} from './useProfileController';
+import {useEffect, useMemo, useState, useCallback} from 'react';
+import {Card} from '../models/card';
+import {CardRepository} from '../repositories';
+import {CardService} from '../services';
 import {ShareNfcService} from '../services/ShareNfcService';
 
-export function useShareNfcController() {
-  const {profile, loading} = useProfileController();
+export function useShareNfcController(cardId: string) {
+  const cardService = useMemo(() => new CardService(new CardRepository()), []);
   const service = useMemo(() => new ShareNfcService(), []);
+  const [card, setCard] = useState<Card>({id: cardId, name: '', fields: []});
+  const [loading, setLoading] = useState(true);
   const [selectedFieldIds, setSelectedFieldIds] = useState<string[]>([]);
   const [sharing, setSharing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!loading) setSelectedFieldIds(profile.fields.filter(field => field.shareable).map(field => field.id));
-  }, [loading, profile.fields]);
+  useEffect(() => { cardService.getCard(cardId).then(value => { if (value) { setCard(value); setSelectedFieldIds(value.fields.filter(field => field.shareable).map(field => field.id)); } }).finally(() => setLoading(false)); }, [cardId, cardService]);
 
   useEffect(() => () => { service.stop().catch(() => undefined); }, [service]);
 
@@ -23,12 +25,12 @@ export function useShareNfcController() {
     setError(null);
     try {
       if (sharing) await service.stop();
-      else await service.start(profile, selectedFieldIds);
+      else await service.start(card, selectedFieldIds);
       setSharing(!sharing);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'No se pudo activar NFC');
     }
-  }, [profile, selectedFieldIds, service, sharing]);
+  }, [card, selectedFieldIds, service, sharing]);
 
-  return {profile, loading, selectedFieldIds, toggleField, sharing, toggleSharing, error};
+  return {card, loading, selectedFieldIds, toggleField, sharing, toggleSharing, error};
 }

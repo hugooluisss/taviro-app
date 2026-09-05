@@ -1,9 +1,9 @@
-import {Profile, SelectedFieldIds} from '../models/profile';
+import {Card, SelectedFieldIds} from '../models/card';
 import {buildShareableCard} from './ShareableCardService';
 
 export class ShareWhatsappService {
-  buildText(profile: Profile, selectedFieldIds: SelectedFieldIds): string {
-    return buildShareableCard(profile, selectedFieldIds).text;
+  buildText(card: Card, selectedFieldIds: SelectedFieldIds): string {
+    return buildShareableCard(card, selectedFieldIds).text;
   }
 
   buildWhatsappUrl(text: string): string {

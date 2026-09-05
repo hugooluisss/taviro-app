@@ -1,1 +1,1 @@
-export {ProfileRepository} from './ProfileRepository';
+export {CardRepository} from './CardRepository';

@@ -1,19 +1,23 @@
 import React from 'react';
 import {ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {useRoute} from '@react-navigation/native';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type {RootStackParamList} from '../../App';
 import QRCode from 'react-native-qrcode-svg';
 import {useShareQrController} from '../controllers';
 import {useTheme} from '../theme';
 
 export function ShareQrScreen() {
   const theme = useTheme();
-  const {profile, selectedFieldIds, toggleField, vcard, loading} = useShareQrController();
+  const {cardId} = useRoute<NativeStackScreenProps<RootStackParamList, 'ShareQr'>['route']>().params;
+  const {card, selectedFieldIds, toggleField, vcard, loading} = useShareQrController(cardId);
 
   if (loading) return <ActivityIndicator style={styles.loader} color={theme.primary} />;
   return <ScrollView style={{backgroundColor: theme.background}} contentContainerStyle={styles.content}>
     <Text style={[styles.title, {color: theme.text}]}>Compartir por QR</Text>
     <Text style={[styles.subtitle, {color: theme.muted}]}>Elige los campos que quieres compartir.</Text>
     <View style={[styles.card, {backgroundColor: theme.surface, borderColor: theme.border}]}>
-      {profile.fields.map(field => {
+      {card.fields.map(field => {
         const checked = selectedFieldIds.includes(field.id);
         return <Pressable key={field.id} accessibilityRole="checkbox" accessibilityState={{checked}} onPress={() => toggleField(field.id)} style={styles.field}>
           <Text style={{color: checked ? theme.primary : theme.muted}}>{checked ? '☑' : '☐'}</Text>
