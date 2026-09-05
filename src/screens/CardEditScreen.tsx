@@ -27,16 +27,16 @@ export default function CardEditScreen() {
     <Pressable style={[styles.button, {backgroundColor: theme.accent}]} onPress={() => setShareMenuOpen(true)}><Text style={styles.buttonText}>Compartir</Text></Pressable>
     <Modal visible={shareMenuOpen} transparent animationType="fade" onRequestClose={() => setShareMenuOpen(false)}>
       <Pressable style={styles.modalOverlay} onPress={() => setShareMenuOpen(false)}>
-        <Pressable style={[styles.modalCard, {backgroundColor: theme.cardOverlay, borderColor: theme.cardOverlayBorder}]} onPress={() => {}}>
-          <Text style={[styles.modalTitle, {color: theme.onGradientText}]}>Compartir tarjeta</Text>
+        <Pressable style={[styles.modalCard, {backgroundColor: theme.surface, borderColor: theme.border}]} onPress={() => {}}>
+          <Text style={[styles.modalTitle, {color: theme.text}]}>Compartir tarjeta</Text>
           <Pressable style={[styles.button, {backgroundColor: theme.accent}]} onPress={() => {setShareMenuOpen(false); navigation.navigate('ShareQr', {cardId});}}><Text style={styles.buttonText}>QR</Text></Pressable>
           <Pressable style={[styles.button, {backgroundColor: theme.accent}]} onPress={() => {setShareMenuOpen(false); navigation.navigate('ShareNfc', {cardId});}}><Text style={styles.buttonText}>NFC</Text></Pressable>
           <Pressable style={[styles.button, {backgroundColor: theme.accent}]} onPress={() => {setShareMenuOpen(false); navigation.navigate('ShareWhatsapp', {cardId});}}><Text style={styles.buttonText}>WhatsApp</Text></Pressable>
-          <Pressable style={[styles.button, {backgroundColor: theme.cardOverlayBorder}]} onPress={() => setShareMenuOpen(false)}><Text style={[styles.buttonText, {color: theme.onGradientText}]}>Cancelar</Text></Pressable>
+          <Pressable style={[styles.button, {backgroundColor: theme.primaryLight}]} onPress={() => setShareMenuOpen(false)}><Text style={[styles.buttonText, {color: theme.text}]}>Cancelar</Text></Pressable>
         </Pressable>
       </Pressable>
     </Modal>
   </ScrollView></GradientBackground>;
 }
 
-const styles = StyleSheet.create({loader: {flex: 1}, content: {padding: 20, gap: 12}, titleInput: {fontSize: 28, fontWeight: '700', borderBottomWidth: 1, paddingVertical: 8}, card: {padding: 18, borderWidth: 1, borderRadius: 22, gap: 8}, label: {fontSize: 15, borderBottomWidth: 1, paddingVertical: 6}, input: {fontSize: 17, borderBottomWidth: 1, paddingVertical: 8}, row: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8}, smallButton: {padding: 10, borderRadius: 999, flex: 1, alignItems: 'center'}, button: {padding: 14, borderRadius: 999, alignItems: 'center'}, buttonText: {color: '#FFF', fontWeight: '700'}, modalOverlay: {flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center'}, modalCard: {width: '85%', borderRadius: 24, borderWidth: 1, padding: 20, gap: 12}, modalTitle: {fontSize: 20, fontWeight: '700', textAlign: 'center'}, photo: {width: 120, height: 120, borderRadius: 16}});
+const styles = StyleSheet.create({loader: {flex: 1}, content: {padding: 20, gap: 12}, titleInput: {fontSize: 28, fontWeight: '700', borderBottomWidth: 1, paddingVertical: 8}, card: {padding: 18, borderWidth: 1, borderRadius: 22, gap: 8}, label: {fontSize: 15, borderBottomWidth: 1, paddingVertical: 6}, input: {fontSize: 17, borderBottomWidth: 1, paddingVertical: 8}, row: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8}, smallButton: {padding: 10, borderRadius: 999, flex: 1, alignItems: 'center'}, button: {padding: 14, borderRadius: 999, alignItems: 'center'}, buttonText: {color: '#FFF', fontWeight: '700'}, modalOverlay: {flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center'}, modalCard: {width: '85%', borderRadius: 24, borderWidth: 1, padding: 20, gap: 12, elevation: 6}, modalTitle: {fontSize: 20, fontWeight: '700', textAlign: 'center'}, photo: {width: 120, height: 120, borderRadius: 16}});
