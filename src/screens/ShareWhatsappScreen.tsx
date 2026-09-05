@@ -6,25 +6,27 @@ import type {RootStackParamList} from '../../App';
 import {useShareWhatsappController} from '../controllers';
 import {useTheme} from '../theme';
 import {GradientBackground} from '../components/GradientBackground';
+import {useLanguage} from '../i18n/I18nContext';
 
 export function ShareWhatsappScreen() {
   const theme = useTheme();
+  const {t} = useLanguage();
   const {cardId} = useRoute<NativeStackScreenProps<RootStackParamList, 'ShareWhatsapp'>['route']>().params;
   const {card, loading, selectedFieldIds, toggleField, share, openWhatsApp, whatsappAvailable} = useShareWhatsappController(cardId);
 
   if (loading) return <ActivityIndicator style={styles.loader} color={theme.primary} />;
   return <GradientBackground><ScrollView contentContainerStyle={styles.content}>
-    <Text style={[styles.title, {color: theme.onGradientText}]}>Compartir por WhatsApp</Text>
-    <Text style={[styles.subtitle, {color: theme.onGradientMuted}]}>Elige los campos que quieres compartir.</Text>
+    <Text style={[styles.title, {color: theme.onGradientText}]}>{t('shareWhatsapp.title')}</Text>
+    <Text style={[styles.subtitle, {color: theme.onGradientMuted}]}>{t('shareWhatsapp.subtitle')}</Text>
     <View style={[styles.card, {backgroundColor: theme.cardOverlay, borderColor: theme.cardOverlayBorder}]}>
       {card.fields.map(field => <Pressable key={field.id} accessibilityRole="checkbox" accessibilityState={{checked: selectedFieldIds.includes(field.id)}} onPress={() => toggleField(field.id)} style={styles.field}>
         <Text style={[styles.checkbox, {color: selectedFieldIds.includes(field.id) ? theme.primary : theme.onGradientMuted}]}>{selectedFieldIds.includes(field.id) ? '☑' : '☐'}</Text>
-        <Text style={{color: theme.onGradientText}}>{field.label || 'Sin etiqueta'}</Text>
+        <Text style={{color: theme.onGradientText}}>{field.label || t('shareWhatsapp.noLabelField')}</Text>
         <Text style={[styles.value, {color: theme.onGradientMuted}]} numberOfLines={1}>{field.value}</Text>
       </Pressable>)}
     </View>
-    <Pressable accessibilityRole="button" style={[styles.button, {backgroundColor: theme.primary}]} onPress={share}><Text style={styles.buttonText}>Compartir</Text></Pressable>
-    {whatsappAvailable && <Pressable accessibilityRole="button" style={[styles.button, {backgroundColor: theme.accent}]} onPress={openWhatsApp}><Text style={styles.buttonText}>Abrir WhatsApp</Text></Pressable>}
+    <Pressable accessibilityRole="button" style={[styles.button, {backgroundColor: theme.primary}]} onPress={share}><Text style={styles.buttonText}>{t('shareWhatsapp.share')}</Text></Pressable>
+    {whatsappAvailable && <Pressable accessibilityRole="button" style={[styles.button, {backgroundColor: theme.accent}]} onPress={openWhatsApp}><Text style={styles.buttonText}>{t('shareWhatsapp.openWhatsapp')}</Text></Pressable>}
   </ScrollView></GradientBackground>;
 }
 
