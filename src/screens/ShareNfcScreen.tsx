@@ -12,7 +12,7 @@ export default function ShareNfcScreen() {
     <Text style={[styles.subtitle, {color: theme.muted}]}>Elige los datos que quieres emitir al acercar otro teléfono.</Text>
     <View style={[styles.card, {backgroundColor: theme.surface, borderColor: theme.border}]}>
       {profile.fields.map(field => <Pressable key={field.id} accessibilityRole="checkbox" accessibilityState={{checked: selectedFieldIds.includes(field.id)}} onPress={() => toggleField(field.id)} style={styles.row}>
-        <Text style={{color: selectedFieldIds.includes(field.id) ? theme.primary : theme.muted, fontSize: 18}}>{selectedFieldIds.includes(field.id) ? '☑' : '☐'}</Text>
+        <Text style={[styles.checkbox, {color: selectedFieldIds.includes(field.id) ? theme.primary : theme.muted}]}>{selectedFieldIds.includes(field.id) ? '☑' : '☐'}</Text>
         <Text style={[styles.field, {color: theme.text}]}>{field.label}</Text>
       </Pressable>)}
     </View>
@@ -24,4 +24,4 @@ export default function ShareNfcScreen() {
   </ScrollView>;
 }
 
-const styles = StyleSheet.create({loader: {flex: 1}, content: {padding: 20, gap: 12}, title: {fontSize: 28, fontWeight: '700'}, subtitle: {fontSize: 16, marginBottom: 8}, card: {padding: 14, borderWidth: 1, borderRadius: 12, gap: 14}, row: {flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 32}, field: {fontSize: 17}, button: {padding: 14, borderRadius: 10, alignItems: 'center'}, buttonText: {color: '#FFF', fontWeight: '700'}, status: {textAlign: 'center'}});
+const styles = StyleSheet.create({loader: {flex: 1}, content: {padding: 20, gap: 12}, title: {fontSize: 28, fontWeight: '700'}, subtitle: {fontSize: 16, marginBottom: 8}, card: {padding: 14, borderWidth: 1, borderRadius: 12, gap: 14}, row: {flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 32}, checkbox: {fontSize: 18}, field: {fontSize: 17}, button: {padding: 14, borderRadius: 10, alignItems: 'center'}, buttonText: {color: '#FFF', fontWeight: '700'}, status: {textAlign: 'center'}});

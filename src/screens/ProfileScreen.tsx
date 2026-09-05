@@ -1,10 +1,14 @@
 import React from 'react';
 import {ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import type {RootStackParamList} from '../../App';
 import {useProfileController} from '../controllers';
 import {useTheme} from '../theme';
 
 export function ProfileScreen() {
   const theme = useTheme();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {profile, loading, updateField, addField, removeField, setPhotoUri, save} = useProfileController();
   if (loading) return <ActivityIndicator style={styles.loader} color={theme.primary} />;
   return <ScrollView style={{backgroundColor: theme.background}} contentContainerStyle={styles.content}>
@@ -23,8 +27,13 @@ export function ProfileScreen() {
     </View>)}
     <Pressable style={[styles.button, {backgroundColor: theme.primary}]} onPress={addField}><Text style={styles.buttonText}>+ Agregar campo</Text></Pressable>
     <Pressable style={[styles.button, {backgroundColor: theme.primaryDark}]} onPress={save}><Text style={styles.buttonText}>Guardar tarjeta</Text></Pressable>
-    <Text style={[styles.pending, {color: theme.muted}]}>Compartir por QR · NFC · WhatsApp (pendiente)</Text>
+    <Text style={[styles.sectionTitle, {color: theme.text}]}>Compartir tarjeta</Text>
+    <View style={styles.row}>
+      <Pressable style={[styles.button, styles.shareButton, {backgroundColor: theme.accent}]} onPress={() => navigation.navigate('ShareQr')}><Text style={styles.buttonText}>QR</Text></Pressable>
+      <Pressable style={[styles.button, styles.shareButton, {backgroundColor: theme.accent}]} onPress={() => navigation.navigate('ShareNfc')}><Text style={styles.buttonText}>NFC</Text></Pressable>
+      <Pressable style={[styles.button, styles.shareButton, {backgroundColor: theme.accent}]} onPress={() => navigation.navigate('ShareWhatsapp')}><Text style={styles.buttonText}>WhatsApp</Text></Pressable>
+    </View>
   </ScrollView>;
 }
 
-const styles = StyleSheet.create({loader: {flex: 1}, content: {padding: 20, gap: 12}, title: {fontSize: 28, fontWeight: '700'}, subtitle: {fontSize: 16, marginBottom: 8}, card: {padding: 14, borderWidth: 1, borderRadius: 12, gap: 8}, label: {fontSize: 15, borderBottomWidth: 1, paddingVertical: 6}, input: {fontSize: 17, borderBottomWidth: 1, paddingVertical: 8}, row: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}, button: {padding: 14, borderRadius: 10, alignItems: 'center'}, buttonText: {color: '#FFF', fontWeight: '700'}, pending: {textAlign: 'center', marginTop: 8}});
+const styles = StyleSheet.create({loader: {flex: 1}, content: {padding: 20, gap: 12}, title: {fontSize: 28, fontWeight: '700'}, subtitle: {fontSize: 16, marginBottom: 8}, sectionTitle: {fontSize: 18, fontWeight: '700', marginTop: 8}, card: {padding: 14, borderWidth: 1, borderRadius: 12, gap: 8}, label: {fontSize: 15, borderBottomWidth: 1, paddingVertical: 6}, input: {fontSize: 17, borderBottomWidth: 1, paddingVertical: 8}, row: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8}, button: {padding: 14, borderRadius: 10, alignItems: 'center'}, shareButton: {flex: 1}, buttonText: {color: '#FFF', fontWeight: '700'}, pending: {textAlign: 'center', marginTop: 8}});

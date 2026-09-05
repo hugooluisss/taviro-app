@@ -11,9 +11,9 @@ export function useShareNfcController() {
 
   useEffect(() => {
     if (!loading) setSelectedFieldIds(profile.fields.filter(field => field.shareable).map(field => field.id));
-  }, [loading]);
+  }, [loading, profile.fields]);
 
-  useEffect(() => () => { void service.stop(); }, [service]);
+  useEffect(() => () => { service.stop().catch(() => undefined); }, [service]);
 
   const toggleField = useCallback((id: string) => {
     setSelectedFieldIds(ids => ids.includes(id) ? ids.filter(value => value !== id) : [...ids, id]);

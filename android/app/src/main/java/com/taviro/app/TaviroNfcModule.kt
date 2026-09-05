@@ -5,7 +5,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 
-class TaviroNfcModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
+class TaviroNfcModule(private val context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
   override fun getName() = "TaviroNfcHce"
 
   @ReactMethod
