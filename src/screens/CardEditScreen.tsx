@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp, NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -7,16 +7,24 @@ import {useCardController} from '../controllers';
 import {useTheme} from '../theme';
 import {GradientBackground} from '../components/GradientBackground';
 import {useLanguage} from '../i18n/I18nContext';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function CardEditScreen() {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const {t} = useLanguage();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {cardId} = useRoute<NativeStackScreenProps<RootStackParamList, 'CardEdit'>['route']>().params;
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
+  const [justSaved, setJustSaved] = useState(false);
   const {card, loading, updateField, addField, removeField, updateName, save} = useCardController(cardId);
+  useEffect(() => {
+    if (!justSaved) return;
+    const timeout = setTimeout(() => setJustSaved(false), 1500);
+    return () => clearTimeout(timeout);
+  }, [justSaved]);
   if (loading) return <ActivityIndicator style={styles.loader} color={theme.primary} />;
-  return <GradientBackground><ScrollView contentContainerStyle={styles.content}>
+  return <GradientBackground><ScrollView contentContainerStyle={[styles.content, {paddingBottom: 20 + insets.bottom}]}>
     <TextInput accessibilityLabel={t('cardEdit.cardNameLabel')} value={card.name} onChangeText={updateName} placeholder={t('cardEdit.cardNameLabel')} placeholderTextColor={theme.onGradientMuted} style={[styles.titleInput, {color: theme.onGradientText, borderColor: theme.cardOverlayBorder}]} />
     {card.fields.map(field => <View key={field.id} style={[styles.card, {backgroundColor: theme.cardOverlay, borderColor: theme.cardOverlayBorder}]}>
       <TextInput accessibilityLabel={t('cardEdit.fieldLabelA11y', {id: field.id})} value={field.label} onChangeText={label => updateField(field.id, {label})} style={[styles.label, {color: theme.onGradientText, borderColor: theme.cardOverlayBorder}]} />
@@ -25,7 +33,7 @@ export default function CardEditScreen() {
       <View style={styles.row}><Pressable accessibilityRole="checkbox" accessibilityState={{checked: field.shareable}} onPress={() => updateField(field.id, {shareable: !field.shareable})}><Text style={{color: field.shareable ? theme.primary : theme.onGradientMuted}}>{field.shareable ? '☑' : '☐'} {t('cardEdit.shareable')}</Text></Pressable><Pressable onPress={() => removeField(field.id)}><Text style={{color: theme.error}}>{t('cardEdit.remove')}</Text></Pressable></View>
     </View>)}
     <View style={styles.row}>{(['text', 'phone', 'email', 'photo'] as const).map(type => <Pressable key={type} style={[styles.smallButton, {backgroundColor: theme.primaryLight}]} onPress={() => addField(type)}><Text style={{color: theme.primary}}>{`+ ${t(`cardEdit.add${type[0].toUpperCase()}${type.slice(1)}`)}`}</Text></Pressable>)}</View>
-    <Pressable style={[styles.button, {backgroundColor: theme.primaryDark}]} onPress={save}><Text style={styles.buttonText}>{t('cardEdit.save')}</Text></Pressable>
+    <Pressable style={[styles.button, {backgroundColor: theme.primaryDark}]} onPress={async () => { await save(); setJustSaved(true); }}><Text style={styles.buttonText}>{t(justSaved ? 'cardEdit.saved' : 'cardEdit.save')}</Text></Pressable>
     <Pressable style={[styles.button, {backgroundColor: theme.accent}]} onPress={() => setShareMenuOpen(true)}><Text style={styles.buttonText}>{t('cardEdit.share')}</Text></Pressable>
     <Modal visible={shareMenuOpen} transparent animationType="fade" onRequestClose={() => setShareMenuOpen(false)}>
       <Pressable style={styles.modalOverlay} onPress={() => setShareMenuOpen(false)}>
@@ -33,7 +41,7 @@ export default function CardEditScreen() {
           <Text style={[styles.modalTitle, {color: theme.text}]}>{t('cardEdit.shareModalTitle')}</Text>
           <Pressable style={[styles.button, {backgroundColor: theme.accent}]} onPress={() => {setShareMenuOpen(false); navigation.navigate('ShareQr', {cardId});}}><Text style={styles.buttonText}>QR</Text></Pressable>
           <Pressable style={[styles.button, {backgroundColor: theme.accent}]} onPress={() => {setShareMenuOpen(false); navigation.navigate('ShareNfc', {cardId});}}><Text style={styles.buttonText}>NFC</Text></Pressable>
-          <Pressable style={[styles.button, {backgroundColor: theme.accent}]} onPress={() => {setShareMenuOpen(false); navigation.navigate('ShareWhatsapp', {cardId});}}><Text style={styles.buttonText}>WhatsApp</Text></Pressable>
+          <Pressable style={[styles.button, {backgroundColor: theme.accent}]} onPress={() => {setShareMenuOpen(false); navigation.navigate('ShareFile', {cardId});}}><Text style={styles.buttonText}>{t('cardEdit.shareOptionFile')}</Text></Pressable>
           <Pressable style={[styles.button, {backgroundColor: theme.primaryLight}]} onPress={() => setShareMenuOpen(false)}><Text style={[styles.buttonText, {color: theme.text}]}>{t('cardEdit.cancel')}</Text></Pressable>
         </Pressable>
       </Pressable>

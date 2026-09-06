@@ -1,21 +1,24 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import type {RootStackParamList} from '../../App';
 import {useCardsController} from '../controllers';
 import {useTheme} from '../theme';
 import {GradientBackground} from '../components/GradientBackground';
 import {useLanguage} from '../i18n/I18nContext';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export function CardListScreen() {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {t} = useLanguage();
-  const {cards, loading, createCard, duplicateCard, deleteCard} = useCardsController();
+  const {cards, loading, createCard, duplicateCard, deleteCard, reload} = useCardsController();
+  useFocusEffect(useCallback(() => { reload(); }, [reload]));
   if (loading) return <ActivityIndicator style={styles.loader} color={theme.primary} />;
   const addCard = async () => { const card = await createCard(t('cardList.newCardDefaultName')); navigation.navigate('CardEdit', {cardId: card.id}); };
-  return <GradientBackground><ScrollView contentContainerStyle={styles.content}>
+  return <GradientBackground><ScrollView contentContainerStyle={[styles.content, {paddingBottom: 20 + insets.bottom}]}>
     <View style={styles.header}><Text style={[styles.title, {color: theme.onGradientText}]}>{t('cardList.title')}</Text><Pressable onPress={() => navigation.navigate('Settings')} accessibilityLabel={t('cardList.settingsButton')}><Text style={{color: theme.primary}}>⚙</Text></Pressable></View>
     {cards.map(card => <View key={card.id} style={[styles.card, {backgroundColor: theme.cardOverlay, borderColor: theme.cardOverlayBorder}]}>
       <Pressable onPress={() => navigation.navigate('CardEdit', {cardId: card.id})} style={styles.info}><Text style={[styles.cardName, {color: theme.onGradientText}]}>{card.name}</Text><Text style={{color: theme.onGradientMuted}}>{t('cardList.fieldsCount', {count: card.fields.length})}</Text></Pressable>

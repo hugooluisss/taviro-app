@@ -8,15 +8,17 @@ import {useShareQrController} from '../controllers';
 import {useTheme} from '../theme';
 import {GradientBackground} from '../components/GradientBackground';
 import {useLanguage} from '../i18n/I18nContext';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export function ShareQrScreen() {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const {t} = useLanguage();
   const {cardId} = useRoute<NativeStackScreenProps<RootStackParamList, 'ShareQr'>['route']>().params;
   const {card, selectedFieldIds, toggleField, vcard, loading} = useShareQrController(cardId);
 
   if (loading) return <ActivityIndicator style={styles.loader} color={theme.primary} />;
-  return <GradientBackground><ScrollView contentContainerStyle={styles.content}>
+  return <GradientBackground><ScrollView contentContainerStyle={[styles.content, {paddingBottom: 20 + insets.bottom}]}>
     <Text style={[styles.title, {color: theme.onGradientText}]}>{t('shareQr.title')}</Text>
     <Text style={[styles.subtitle, {color: theme.onGradientMuted}]}>{t('shareQr.subtitle')}</Text>
     <View style={[styles.card, {backgroundColor: theme.cardOverlay, borderColor: theme.cardOverlayBorder}]}>

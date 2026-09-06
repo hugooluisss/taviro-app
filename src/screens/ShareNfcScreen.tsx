@@ -7,14 +7,16 @@ import {useShareNfcController} from '../controllers';
 import {useTheme} from '../theme';
 import {GradientBackground} from '../components/GradientBackground';
 import {useLanguage} from '../i18n/I18nContext';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function ShareNfcScreen() {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const {t} = useLanguage();
   const {cardId} = useRoute<NativeStackScreenProps<RootStackParamList, 'ShareNfc'>['route']>().params;
   const {card, loading, selectedFieldIds, toggleField, sharing, toggleSharing, error} = useShareNfcController(cardId);
   if (loading) return <ActivityIndicator style={styles.loader} color={theme.primary} />;
-  return <GradientBackground><ScrollView contentContainerStyle={styles.content}>
+  return <GradientBackground><ScrollView contentContainerStyle={[styles.content, {paddingBottom: 20 + insets.bottom}]}>
     <Text style={[styles.title, {color: theme.onGradientText}]}>{t('shareNfc.title')}</Text>
     <Text style={[styles.subtitle, {color: theme.onGradientMuted}]}>{t('shareNfc.subtitle')}</Text>
     <View style={[styles.card, {backgroundColor: theme.cardOverlay, borderColor: theme.cardOverlayBorder}]}>

@@ -9,7 +9,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {StatusBar, useColorScheme} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {CardEditScreen, CardListScreen, SettingsScreen, ShareNfcScreen, ShareQrScreen, ShareWhatsappScreen} from './src/screens';
+import {CardEditScreen, CardListScreen, SettingsScreen, ShareFileScreen, ShareNfcScreen, ShareQrScreen} from './src/screens';
 import {useTheme} from './src/theme';
 import {LanguageProvider, useLanguage} from './src/i18n/I18nContext';
 
@@ -18,7 +18,7 @@ export type RootStackParamList = {
   CardEdit: {cardId: string};
   ShareQr: {cardId: string};
   ShareNfc: {cardId: string};
-  ShareWhatsapp: {cardId: string};
+  ShareFile: {cardId: string};
   Settings: undefined;
 };
 
@@ -34,7 +34,7 @@ function AppContent() {
       <Stack.Screen name="CardEdit" component={CardEditScreen} options={{title: t('nav.cardEdit')}} />
       <Stack.Screen name="ShareQr" component={ShareQrScreen} options={{title: t('nav.shareQr')}} />
       <Stack.Screen name="ShareNfc" component={ShareNfcScreen} options={{title: t('nav.shareNfc')}} />
-      <Stack.Screen name="ShareWhatsapp" component={ShareWhatsappScreen} options={{title: t('nav.shareWhatsapp')}} />
+      <Stack.Screen name="ShareFile" component={ShareFileScreen} options={{title: t('nav.shareFile')}} />
       <Stack.Screen name="Settings" component={SettingsScreen} options={{title: t('nav.settings')}} />
     </Stack.Navigator></NavigationContainer></SafeAreaProvider>
   );

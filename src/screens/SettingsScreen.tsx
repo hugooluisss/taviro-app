@@ -4,12 +4,14 @@ import {GradientBackground} from '../components/GradientBackground';
 import {useLanguage} from '../i18n/I18nContext';
 import {useTheme} from '../theme';
 import type {LanguagePreference} from '../repositories/LanguageRepository';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const {preference, setLanguagePreference, t} = useLanguage();
   const options: [LanguagePreference, string][] = [['system', t('settings.systemDefault')], ['es', t('settings.spanish')], ['en', t('settings.english')]];
-  return <GradientBackground><View style={styles.content}>
+  return <GradientBackground><View style={[styles.content, {paddingBottom: 20 + insets.bottom}]}>
     <Text style={[styles.title, {color: theme.onGradientText}]}>{t('settings.title')}</Text>
     <View style={[styles.card, {backgroundColor: theme.cardOverlay, borderColor: theme.cardOverlayBorder}]}>
       <Text style={[styles.section, {color: theme.onGradientText}]}>{t('settings.languageSection')}</Text>
